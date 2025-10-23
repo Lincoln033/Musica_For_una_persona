@@ -147,9 +147,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   loadLyrics();
-  audio.play().catch(e => {
-    console.error('Erro ao reproduzir áudio:', e);
-    lyricsContainer.innerHTML = '<div class="error-message">Erro ao iniciar o áudio</div>';
-  });
-  requestAnimationFrame(updateLyrics);
+
+  // Adiciona overlay para interação
+  const startOverlay = document.createElement('div');
+  startOverlay.id = 'startOverlay';
+  startOverlay.className = 'start-overlay';
+  startOverlay.textContent = 'Toque na tela para iniciar a música';
+  document.body.appendChild(startOverlay);
+
+  // Evento de toque/clique para iniciar
+  startOverlay.addEventListener('click', () => {
+    console.log('Toque detectado, iniciando áudio');
+    startOverlay.style.display = 'none';
+    audio.play().catch(e => {
+      console.error('Erro ao reproduzir áudio:', e);
+      lyricsContainer.innerHTML = '<div class="error-message">Erro ao iniciar o áudio</div>';
+    });
+    requestAnimationFrame(updateLyrics);
+  }, { once: true });
 });
