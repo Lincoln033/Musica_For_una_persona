@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Letra com Música</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: black;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    #lyricsContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .line {
+      opacity: 0;
+      font-size: 2em;
+      line-height: 1.4em;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .visible {
+      opacity: 1;
+    }
+
+    #fileInput {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: white;
+    }
+
+    #lyricsInput {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      width: 300px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    #loadBtn {
+      position: fixed;
+      bottom: 170px;
+      left: 10px;
+      padding: 5px 10px;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <input type="file" id="fileInput" accept="audio/*">
+  <button id="loadBtn">Carregar Letra</button>
+  <textarea id="lyricsInput">[00:00] Exemplo de letra
+[00:05] Segunda linha
+[00:10] Terceira linha
+[00:15] Quarta linha</textarea>
+
+  <div id="lyricsContainer"></div>
+  <audio id="audio"></audio>
+
+<script>
+  const audio = document.getElementById('audio');
+  const lyricsInput = document.getElementById('lyricsInput');
+  const lyricsContainer = document.getElementById('lyricsContainer');
+  const loadBtn = document.getElementById('loadBtn');
+
+  let lyrics = [];
+  let currentIndex = 0;
+
+  // Define a música diretamente
+  audio.src = "Humbe_-_fantasmas_(SkySound.cc).mp3";
+
+// O áudio só começa depois que a letra é carregada
+loadBtn.addEventListener('click', () => {
+  audio.play();
+});
+
+
+  loadBtn.addEventListener('click', () => {
+    const lines = lyricsInput.value.split('\n').filter(l => l.trim() !== '');
+    lyrics = lines.map(line => {
+      const match = line.match(/^\[(\d{2}):(\d{2})\](.*)$/);
+      if (match) {
+        const time = parseInt(match[1]) * 60 + parseInt(match[2]);
+        return { time, text: match[3].trim() };
+      } else {
+        return { time: 0, text: line.trim() };
+      }
+    });
+    lyricsContainer.innerHTML = '';
+    lyrics.forEach(l => {
+      const div = document.createElement('div');
+      div.className = 'line';
+      div.textContent = l.text;
+      lyricsContainer.appendChild(div);
+    });
+    currentIndex = 0;
+    audio.currentTime = 0;
+    audio.play();
+    requestAnimationFrame(updateLyrics);
+  });
+
+  function updateLyrics() {
+    const currentTime = audio.currentTime;
+    for (let i = 0; i < lyrics.length; i++) {
+      const nextTime = lyrics[i + 1] ? lyrics[i + 1].time : Infinity;
+      const lineEl = lyricsContainer.children[i];
+      if (currentTime >= lyrics[i].time && currentTime < nextTime) {
+        lineEl.classList.add('visible');
+      } else {
+        lineEl.classList.remove('visible');
+      }
+    }
+    requestAnimationFrame(updateLyrics);
+  }
+</script>
+
+</body>
+</html>
