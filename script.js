@@ -1,5 +1,6 @@
 const audio = document.getElementById('audio');
 const lyricsContainer = document.getElementById('lyricsContainer');
+const testMessage = document.getElementById('testMessage');
 
 const rawLyrics = `
 [00:00] (Sem letra, violão dedilhado suave, build-up emocional)
@@ -45,13 +46,13 @@ const rawLyrics = `
 [03:34] Son puros recuerdos
 [03:37] Son mil sentimientos
 [03:40] De lo que vivimos
-[03:43] Cuando tú estabas aquí
+[03:43] Cuando tú estabas aqui
 [03:48] (Instrumental, eco vocal suave)
 [03:58] En esta casa no existen fantasmas
 [04:03] Son puros recuerdos
 [04:08] Son mil sentimientos
 [04:13] De lo que vivimos
-[04:18] Cuando tú estabas aquí
+[04:18] Cuando tú estabas aqui
 [04:23] (Fade-out instrumental)
 [04:33] (Silêncio com eco suave)
 [04:47] (Fim da música)
@@ -60,6 +61,12 @@ const rawLyrics = `
 let lyrics = [];
 
 function loadLyrics() {
+  if (!lyricsContainer) {
+    document.body.innerHTML = '<div class="error-message">Erro: lyricsContainer não encontrado</div>';
+    console.error('Erro: lyricsContainer não encontrado');
+    return;
+  }
+
   const lines = rawLyrics.trim().split('\n').filter(l => l.trim() !== '');
   lyrics = lines.map(line => {
     const match = line.match(/^\[(\d{2}):(\d{2})\](.*)$/);
@@ -94,6 +101,7 @@ function loadLyrics() {
   if (lyricsContainer.children[0]) {
     lyricsContainer.children[0].classList.add('visible');
     console.log('Primeira linha exibida: ', lyricsContainer.children[0].textContent);
+    testMessage.textContent = 'Teste: Letras carregadas com sucesso';
   } else {
     const errorMsg = document.createElement('div');
     errorMsg.className = 'error-message';
@@ -125,6 +133,7 @@ audio.onerror = () => {
   errorMsg.textContent = 'Erro ao carregar o áudio. Verifique o arquivo.';
   lyricsContainer.appendChild(errorMsg);
   console.error('Erro no áudio: arquivo não carregado');
+  testMessage.textContent = 'Teste: Erro no áudio';
 };
 
 window.onload = () => {
@@ -132,6 +141,15 @@ window.onload = () => {
   if (!lyricsContainer) {
     document.body.innerHTML = '<div class="error-message">Erro: lyricsContainer não encontrado</div>';
     console.error('Erro: lyricsContainer não encontrado');
+    return;
+  }
+
+  if (!audio) {
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'error-message';
+    errorMsg.textContent = 'Erro: Elemento de áudio não encontrado';
+    lyricsContainer.appendChild(errorMsg);
+    console.error('Erro: Elemento de áudio não encontrado');
     return;
   }
 
@@ -158,6 +176,7 @@ window.onload = () => {
       errorMsg.className = 'error-message';
       errorMsg.textContent = 'Erro ao iniciar o áudio';
       lyricsContainer.appendChild(errorMsg);
+      testMessage.textContent = 'Teste: Erro ao iniciar o áudio';
     });
     msg.classList.remove('visible');
     requestAnimationFrame(updateLyrics);

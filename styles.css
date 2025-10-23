@@ -21,6 +21,7 @@ html, body {
   text-align: center;
   flex-direction: column;
   overflow: hidden;
+  border: 1px solid red; /* Para depuração */
 }
 
 .line {
@@ -30,6 +31,7 @@ html, body {
   transition: opacity 0.8s ease-in-out;
   color: #ffffff;
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+  border: 1px solid green; /* Para depuração */
 }
 
 .visible {
@@ -50,4 +52,5 @@ html, body {
   color: red;
   font-size: 1.5em;
   text-align: center;
+  border: 1px solid yellow; /* Para depuração */
 }
