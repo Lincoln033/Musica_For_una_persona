@@ -1,0 +1,51 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: black !important;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+#lyricsContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.line {
+  opacity: 0;
+  font-size: 3em; /* Aumentado para melhor visibilidade */
+  line-height: 1.5em;
+  transition: opacity 1.2s ease-in-out;
+  color: #ffffff;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+.visible {
+  opacity: 1;
+}
+
+.start-message {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: gray;
+  font-size: 1.2em;
+}
+
+.error-message {
+  color: red;
+  font-size: 1.5em;
+}
