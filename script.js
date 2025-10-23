@@ -147,4 +147,19 @@ window.onload = () => {
 
   const msg = document.createElement('div');
   msg.className = 'start-message';
-  msg
+  msg.textContent = 'Clique na tela para começar 🎵';
+  lyricsContainer.appendChild(msg);
+
+  document.body.addEventListener('click', () => {
+    console.log('Clique detectado, iniciando áudio');
+    audio.play().catch(e => {
+      console.error('Erro ao reproduzir áudio:', e);
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'error-message';
+      errorMsg.textContent = 'Erro ao iniciar o áudio';
+      lyricsContainer.appendChild(errorMsg);
+    });
+    msg.classList.remove('visible');
+    requestAnimationFrame(updateLyrics);
+  }, { once: true });
+};
