@@ -7,7 +7,7 @@ const rawLyrics = `
 [00:15] Y me falla un poco más mi realidad
 [00:20] Aún los llevo pasando por la yugular
 [00:25] Y el recuerdo se convierte temporal
-[00:30] En esta casa no existen fantasmas
+[00:30] En esta casa no existem fantasmas
 [00:35] Son puros recuerdos
 [00:38] De tiempos ajenos
 [00:41] De buenos momentos
@@ -19,7 +19,7 @@ const rawLyrics = `
 [01:24] Tantas fotos llenando los marcos
 [01:29] Mi propio museo
 [01:34] No hay muchos trofeos
-[01:39] Con ustedes tengo
+[01:39] Con ustedes, tengo
 [01:44] Y aunque te lleve en la sangre
 [01:49] Me duele sentirte tan lejos
 [01:54] Destellas el cielo
@@ -28,15 +28,33 @@ const rawLyrics = `
 [02:09] Tan cerca el impacto
 [02:14] Hay que ser bien fuertes
 [02:19] Pa' ver a la muerte
-[02:24] De frente, y aprender
-[02:29] A celebrar
-[02:34] Hay que ser bien fuertes
-[02:39] Pa' ver a la muerte
-[02:44] De frente, y aprender
-[02:49] A celebrar
-[02:54] Hay que ser bien fuertes...
-[03:00] Pa' ver a la muerte...
-[03:05] (Fade-out com eco vocal e violão suave)
+[02:24] Derecho y honrado
+[02:29] Cansa'o de pensarlo, oh
+[02:34] No puedo evitarlo
+[02:39] Quiero estar juntitos
+[02:44] Tomarme contigo un último trago
+[02:49] Oh-oh, oh-oh-oh (un último trago)
+[02:54] Ya viví lo que pude vivir
+[02:59] Perdón que me tenga que ir
+[03:04] En la noche, conquisto el silencio
+[03:09] Y la ausencia del ruido genera un vacío
+[03:14] Perdón que me tenga que ir
+[03:19] Perdón que me tenga que ir
+[03:24] Oh, oh, oh, oh-oh-oh-oh
+[03:29] En esta casa no existen fantasmas
+[03:34] Son puros recuerdos
+[03:37] Son mil sentimientos
+[03:40] De lo que vivimos
+[03:43] Cuando tú estabas aquí
+[03:48] (Instrumental, eco vocal suave)
+[03:58] En esta casa no existen fantasmas
+[04:03] Son puros recuerdos
+[04:08] Son mil sentimientos
+[04:13] De lo que vivimos
+[04:18] Cuando tú estabas aquí
+[04:23] (Fade-out instrumental)
+[04:33] (Silêncio com eco suave)
+[04:47] (Fim da música)
 `;
 
 let lyrics = [];
@@ -76,6 +94,12 @@ function loadLyrics() {
   if (lyricsContainer.children[0]) {
     lyricsContainer.children[0].classList.add('visible');
     console.log('Primeira linha exibida: ', lyricsContainer.children[0].textContent);
+  } else {
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'error-message';
+    errorMsg.textContent = 'Erro: Nenhuma linha renderizada';
+    lyricsContainer.appendChild(errorMsg);
+    console.error('Erro: Nenhuma linha no lyricsContainer');
   }
 }
 
@@ -85,10 +109,10 @@ function updateLyrics() {
   for (let i = 0; i < lyrics.length; i++) {
     const nextTime = lyrics[i + 1] ? lyrics[i + 1].time : Infinity;
     const lineEl = lyricsContainer.children[i];
-    if (currentTime >= lyrics[i].time && currentTime < nextTime) {
+    if (lineEl && currentTime >= lyrics[i].time && currentTime < nextTime) {
       lineEl.classList.add('visible');
       console.log(`Linha visível: ${lineEl.textContent}`);
-    } else {
+    } else if (lineEl) {
       lineEl.classList.remove('visible');
     }
   }
@@ -105,27 +129,22 @@ audio.onerror = () => {
 
 window.onload = () => {
   console.log('Página carregada');
+  if (!lyricsContainer) {
+    document.body.innerHTML = '<div class="error-message">Erro: lyricsContainer não encontrado</div>';
+    console.error('Erro: lyricsContainer não encontrado');
+    return;
+  }
+
   loadLyrics();
   if (!lyricsContainer.children.length) {
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'error-message';
+    errorMsg.textContent = 'Erro: Nenhuma letra carregada no container';
+    lyricsContainer.appendChild(errorMsg);
     console.error('Erro: lyricsContainer vazio');
     return;
   }
 
   const msg = document.createElement('div');
   msg.className = 'start-message';
-  msg.textContent = 'Clique na tela para começar 🎵';
-  lyricsContainer.appendChild(msg);
-
-  document.body.addEventListener('click', () => {
-    console.log('Clique detectado, iniciando áudio');
-    audio.play().catch(e => {
-      console.error('Erro ao reproduzir áudio:', e);
-      const errorMsg = document.createElement('div');
-      errorMsg.className = 'error-message';
-      errorMsg.textContent = 'Erro ao iniciar o áudio';
-      lyricsContainer.appendChild(errorMsg);
-    });
-    msg.remove();
-    requestAnimationFrame(updateLyrics);
-  }, { once: true });
-};
+  msg

@@ -25,11 +25,11 @@ html, body {
 
 .line {
   opacity: 0;
-  font-size: 3em; /* Aumentado para melhor visibilidade */
+  font-size: 3em;
   line-height: 1.5em;
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 0.8s ease-in-out;
   color: #ffffff;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
 }
 
 .visible {
@@ -43,9 +43,11 @@ html, body {
   text-align: center;
   color: gray;
   font-size: 1.2em;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .error-message {
   color: red;
   font-size: 1.5em;
+  text-align: center;
 }
