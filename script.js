@@ -1,71 +1,64 @@
+console.log('Script iniciado');
+
 const audio = document.getElementById('audio');
 const lyricsContainer = document.getElementById('lyricsContainer');
-const testMessage = document.getElementById('testMessage');
+
+if (!lyricsContainer) {
+  document.body.innerHTML = '<div style="color: red; font-size: 2em; text-align: center;">Erro: lyricsContainer não encontrado</div>';
+  console.error('Erro: lyricsContainer não encontrado');
+}
 
 const rawLyrics = `
-[00:00] (Sem letra, violão dedilhado suave, build-up emocional)
-[00:10] Del gran sueño no me quiero despertar
-[00:15] Y me falla un poco más mi realidad
-[00:20] Aún los llevo pasando por la yugular
-[00:25] Y el recuerdo se convierte temporal
-[00:30] En esta casa no existem fantasmas
-[00:35] Son puros recuerdos
-[00:38] De tiempos ajenos
-[00:41] De buenos momentos
-[00:44] En el cielo volaban los buitres
-[00:49] Que auguran deceso
-[00:54] El fin de los tiempos
-[00:59] Nos hacemos eternos
-[01:04] (Guitarra melódica, arpejos suaves)
-[01:24] Tantas fotos llenando los marcos
-[01:29] Mi propio museo
-[01:34] No hay muchos trofeos
-[01:39] Con ustedes, tengo
-[01:44] Y aunque te lleve en la sangre
-[01:49] Me duele sentirte tan lejos
-[01:54] Destellas el cielo
-[01:59] Y ahora te celebro
-[02:04] Lo sigo intentando
-[02:09] Tan cerca el impacto
-[02:14] Hay que ser bien fuertes
-[02:19] Pa' ver a la muerte
-[02:24] Derecho y honrado
-[02:29] Cansa'o de pensarlo, oh
-[02:34] No puedo evitarlo
-[02:39] Quiero estar juntitos
-[02:44] Tomarme contigo un último trago
-[02:49] Oh-oh, oh-oh-oh (un último trago)
-[02:54] Ya viví lo que pude vivir
-[02:59] Perdón que me tenga que ir
-[03:04] En la noche, conquisto el silencio
-[03:09] Y la ausencia del ruido genera un vacío
+[00:00] Del gran sueño no me quiero despertar
+[00:10] Y me falla un poco más mi realidad
+[00:19] Aún los llevo pasando por la yugular
+[00:28] Y el recuerdo se convierte atemporal
+[00:36] En esta casa no existen fantasmas
+[00:40] Son puros recuerdos
+[00:45] De tiempos ajenos
+[00:49] De buenos momentos
+[00:54] En el cielo volaban los buitres
+[00:57] Que auguran deceso
+[01:02] El fin de los tiempos
+[01:06] Nos hacemos eternos
+[01:50] Tantas fotos llenando los marcos
+[01:52] Mi propio museo
+[01:57] No hay muchos trofeos
+[02:01] Con ustedes tengo
+[02:05] Y aunque te lleve en la sangre
+[02:09] Me duele sentirte tan lejos
+[02:14] Destellas el cielo
+[02:19] Y ahora te celebro
+[02:23] Lo sigo intentando
+[02:27] Tan cerca el impacto
+[02:32] Hay que ser bien fuertes
+[02:34] Pa' ver a la muerte
+[02:36] Derecho y honrado
+[02:41] Cansado de pensarlo
+[02:45] No puedo evitarlo
+[02:49] Quiero estar juntitos
+[02:52] Tomarme contigo un último trago
+[02:58] Oh-oh, oh-oh-oh (un último trago)
+[02:51] Ya viví lo que pude vivir
 [03:14] Perdón que me tenga que ir
-[03:19] Perdón que me tenga que ir
-[03:24] Oh, oh, oh, oh-oh-oh-oh
-[03:29] En esta casa no existen fantasmas
-[03:34] Son puros recuerdos
-[03:37] Son mil sentimientos
-[03:40] De lo que vivimos
-[03:43] Cuando tú estabas aqui
-[03:48] (Instrumental, eco vocal suave)
-[03:58] En esta casa no existen fantasmas
-[04:03] Son puros recuerdos
-[04:08] Son mil sentimientos
-[04:13] De lo que vivimos
-[04:18] Cuando tú estabas aqui
-[04:23] (Fade-out instrumental)
-[04:33] (Silêncio com eco suave)
-[04:47] (Fim da música)
+[03:19] En la noche conquisto el silencio
+[03:23] Y la ausencia del ruido genera un vacío
+[03:32] Perdón que me tenga que ir
+[03:41] Perdón que me tenga que ir
+[03:48] Oh, oh, oh, oh-oh-oh-oh
+[04:09] En esta casa no existen fantasmas
+[04:13] Son puros recuerdos
+[04:17] Son mil sentimientos
+[04:22] De lo que vivimos
+[04:24] Quando tú estabas aqui
+[04:46] (Fim da música)
 `;
 
 let lyrics = [];
 
 function loadLyrics() {
-  if (!lyricsContainer) {
-    document.body.innerHTML = '<div class="error-message">Erro: lyricsContainer não encontrado</div>';
-    console.error('Erro: lyricsContainer não encontrado');
-    return;
-  }
+  console.log('loadLyrics chamado');
+  lyricsContainer.innerHTML = '';
 
   const lines = rawLyrics.trim().split('\n').filter(l => l.trim() !== '');
   lyrics = lines.map(line => {
@@ -80,105 +73,68 @@ function loadLyrics() {
     }
   });
 
-  lyricsContainer.innerHTML = '';
   if (lyrics.length === 0) {
-    const errorMsg = document.createElement('div');
-    errorMsg.className = 'error-message';
-    errorMsg.textContent = 'Erro: Letras não carregadas';
-    lyricsContainer.appendChild(errorMsg);
+    lyricsContainer.innerHTML = '<div class="error-message">Erro: Letras não carregadas</div>';
     console.error('Erro: Nenhuma letra carregada');
     return;
   }
 
-  lyrics.forEach(l => {
-    const div = document.createElement('div');
-    div.className = 'line';
-    div.textContent = l.text;
-    lyricsContainer.appendChild(div);
-  });
-
   // Exibir a primeira linha imediatamente
-  if (lyricsContainer.children[0]) {
-    lyricsContainer.children[0].classList.add('visible');
-    console.log('Primeira linha exibida: ', lyricsContainer.children[0].textContent);
-    testMessage.textContent = 'Teste: Letras carregadas com sucesso';
-  } else {
-    const errorMsg = document.createElement('div');
-    errorMsg.className = 'error-message';
-    errorMsg.textContent = 'Erro: Nenhuma linha renderizada';
-    lyricsContainer.appendChild(errorMsg);
-    console.error('Erro: Nenhuma linha no lyricsContainer');
-  }
+  lyricsContainer.innerHTML = `<div class="line visible">${lyrics[0].text}</div>`;
+  console.log('Primeira linha exibida: ', lyrics[0].text);
+
+  const startMessage = document.createElement('div');
+  startMessage.className = 'start-message';
+  startMessage.textContent = 'Clique para iniciar a música 🎵';
+  lyricsContainer.appendChild(startMessage);
 }
 
 function updateLyrics() {
   const currentTime = audio.currentTime;
   console.log(`Tempo atual: ${currentTime}s`);
+  let currentLyric = null;
+
   for (let i = 0; i < lyrics.length; i++) {
     const nextTime = lyrics[i + 1] ? lyrics[i + 1].time : Infinity;
-    const lineEl = lyricsContainer.children[i];
-    if (lineEl && currentTime >= lyrics[i].time && currentTime < nextTime) {
-      lineEl.classList.add('visible');
-      console.log(`Linha visível: ${lineEl.textContent}`);
-    } else if (lineEl) {
-      lineEl.classList.remove('visible');
+    if (currentTime >= lyrics[i].time && currentTime < nextTime) {
+      currentLyric = lyrics[i];
+      break;
     }
   }
+
+  if (currentLyric) {
+    lyricsContainer.innerHTML = `<div class="line visible">${currentLyric.text}</div>`;
+    console.log(`Linha visível: ${currentLyric.text}`);
+  } else {
+    lyricsContainer.innerHTML = '<div class="line"></div>';
+  }
+
+  const startMessage = document.querySelector('.start-message');
+  if (startMessage && currentTime > 0) startMessage.remove();
+
   requestAnimationFrame(updateLyrics);
 }
 
 audio.onerror = () => {
-  const errorMsg = document.createElement('div');
-  errorMsg.className = 'error-message';
-  errorMsg.textContent = 'Erro ao carregar o áudio. Verifique o arquivo.';
-  lyricsContainer.appendChild(errorMsg);
+  lyricsContainer.innerHTML = '<div class="error-message">Erro ao carregar o áudio. Verifique o arquivo.</div>';
   console.error('Erro no áudio: arquivo não carregado');
-  testMessage.textContent = 'Teste: Erro no áudio';
 };
 
-window.onload = () => {
-  console.log('Página carregada');
-  if (!lyricsContainer) {
-    document.body.innerHTML = '<div class="error-message">Erro: lyricsContainer não encontrado</div>';
-    console.error('Erro: lyricsContainer não encontrado');
-    return;
-  }
-
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM carregado');
   if (!audio) {
-    const errorMsg = document.createElement('div');
-    errorMsg.className = 'error-message';
-    errorMsg.textContent = 'Erro: Elemento de áudio não encontrado';
-    lyricsContainer.appendChild(errorMsg);
+    lyricsContainer.innerHTML = '<div class="error-message">Erro: Elemento de áudio não encontrado</div>';
     console.error('Erro: Elemento de áudio não encontrado');
     return;
   }
 
   loadLyrics();
-  if (!lyricsContainer.children.length) {
-    const errorMsg = document.createElement('div');
-    errorMsg.className = 'error-message';
-    errorMsg.textContent = 'Erro: Nenhuma letra carregada no container';
-    lyricsContainer.appendChild(errorMsg);
-    console.error('Erro: lyricsContainer vazio');
-    return;
-  }
-
-  const msg = document.createElement('div');
-  msg.className = 'start-message';
-  msg.textContent = 'Clique na tela para começar 🎵';
-  lyricsContainer.appendChild(msg);
-
   document.body.addEventListener('click', () => {
     console.log('Clique detectado, iniciando áudio');
     audio.play().catch(e => {
       console.error('Erro ao reproduzir áudio:', e);
-      const errorMsg = document.createElement('div');
-      errorMsg.className = 'error-message';
-      errorMsg.textContent = 'Erro ao iniciar o áudio';
-      lyricsContainer.appendChild(errorMsg);
-      testMessage.textContent = 'Teste: Erro ao iniciar o áudio';
+      lyricsContainer.innerHTML = '<div class="error-message">Erro ao iniciar o áudio</div>';
     });
-    msg.classList.remove('visible');
     requestAnimationFrame(updateLyrics);
   }, { once: true });
-};
+});
