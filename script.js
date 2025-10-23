@@ -2,6 +2,7 @@ console.log('Script iniciado');
 
 const audio = document.getElementById('audio');
 const lyricsContainer = document.getElementById('lyricsContainer');
+const shareButton = document.getElementById('shareButton');
 
 if (!lyricsContainer) {
   document.body.innerHTML = '<div style="color: red; font-size: 2em; text-align: center;">Erro: lyricsContainer não encontrado</div>';
@@ -79,14 +80,8 @@ function loadLyrics() {
     return;
   }
 
-  // Exibir a primeira linha imediatamente
   lyricsContainer.innerHTML = `<div class="line visible">${lyrics[0].text}</div>`;
   console.log('Primeira linha exibida: ', lyrics[0].text);
-
-  const startMessage = document.createElement('div');
-  startMessage.className = 'start-message';
-  startMessage.textContent = 'Clique para iniciar a música 🎵';
-  lyricsContainer.appendChild(startMessage);
 }
 
 function updateLyrics() {
@@ -109,9 +104,6 @@ function updateLyrics() {
     lyricsContainer.innerHTML = '<div class="line"></div>';
   }
 
-  const startMessage = document.querySelector('.start-message');
-  if (startMessage && currentTime > 0) startMessage.remove();
-
   requestAnimationFrame(updateLyrics);
 }
 
@@ -119,6 +111,32 @@ audio.onerror = () => {
   lyricsContainer.innerHTML = '<div class="error-message">Erro ao carregar o áudio. Verifique o arquivo.</div>';
   console.error('Erro no áudio: arquivo não carregado');
 };
+
+// Função de compartilhamento
+if (shareButton) {
+  shareButton.addEventListener('click', async () => {
+    const shareData = {
+      title: 'Letra com Música - Fantasmas (Humbe)',
+      text: 'Confira a letra sincronizada com a música Fantasmas de Humbe!',
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        console.log('Link compartilhado com sucesso');
+      } else {
+        navigator.clipboard.writeText(shareData.url);
+        alert('Link copiado para a área de transferência!');
+        console.log('Link copiado para a área de transferência');
+      }
+    } catch (err) {
+      console.error('Erro ao compartilhar:', err);
+      alert('Erro ao compartilhar. O link foi copiado para a área de transferência.');
+      navigator.clipboard.writeText(shareData.url);
+    }
+  });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM carregado');
@@ -129,12 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   loadLyrics();
-  document.body.addEventListener('click', () => {
-    console.log('Clique detectado, iniciando áudio');
-    audio.play().catch(e => {
-      console.error('Erro ao reproduzir áudio:', e);
-      lyricsContainer.innerHTML = '<div class="error-message">Erro ao iniciar o áudio</div>';
-    });
-    requestAnimationFrame(updateLyrics);
-  }, { once: true });
+  audio.play().catch(e => {
+    console.error('Erro ao reproduzir áudio:', e);
+    lyricsContainer.innerHTML = '<div class="error-message">Erro ao iniciar o áudio</div>';
+  });
+  requestAnimationFrame(updateLyrics);
 });
